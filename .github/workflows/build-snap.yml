@@ -22,7 +22,7 @@ jobs:
 
       - name: Get latest tag from another repo
         id: test
-        run: echo ${{ steps.get-latest-release.outputs.result }}
+        run: echo "${{ steps.get-latest-release.outputs.result }}"
 
 
       - name: Restore last built release (cache)
