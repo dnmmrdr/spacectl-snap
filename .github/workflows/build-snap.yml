@@ -57,12 +57,13 @@ jobs:
   build-snap:
     runs-on: ubuntu-latest
     needs: detect-version
-    if: ${{ needs.detect-version.outputs.run_build }} == 'true'
+    if: ${{ needs.detect-version.outputs.run_build  == 'true' }}
     
     steps:
       - name: test
         run: |
           echo "${{ needs.detect-version.outputs.run_build }}"
+
       - name: Checkout current code
         uses: actions/checkout@v5
 
