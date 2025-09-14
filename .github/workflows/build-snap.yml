@@ -25,8 +25,6 @@ jobs:
         with:
           path: .last_release
           key: last-release-${{ steps.get-latest-release.outputs.latest_tag }}
-          restore-keys: |
-            last-release-
 
       - name: Compare with cached release
         id: check
@@ -36,6 +34,7 @@ jobs:
             LAST_TAG=$(cat .last_release)
           else
             LAST_TAG=""
+            echo "" > .last_release 
           fi
 
           echo "Latest upstream tag: $LATEST_TAG"
@@ -50,16 +49,16 @@ jobs:
           echo $LATEST_TAG > .last_release
           echo "NEW_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
-      - name: Checkout current code
-        if: env.NEW_TAG != ''
-        uses: actions/checkout@v5
-
-      - name: Update Snap version dynamically
-        if: env.NEW_TAG != ''
-        run: |
-          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
-          cat snap/snapcraft.yaml
-
+#      - name: Checkout current code
+#        if: env.NEW_TAG != ''
+#        uses: actions/checkout@v5
+#
+#      - name: Update Snap version dynamically
+#        if: env.NEW_TAG != ''
+#        run: |
+#          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
+#          cat snap/snapcraft.yaml
+#
 #      - name: Build Snap
 #        if: env.NEW_TAG != ''
 #        uses: snapcore/action-build@v1
