@@ -19,23 +19,19 @@ jobs:
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
           echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
 
-      - name: Get latest tag from another repo
-        id: test
-        run: echo "${{ steps.get-latest-release.outputs.latest_tag }}"
-
       - name: Restore last built release (cache)
         id: cache-last-release
         uses: actions/cache@v4
         with:
           path: .last_release
-          key: last-release-${{ steps.get-latest-release.outputs.result }}
+          key: last-release-${{ steps.get-latest-release.outputs.latest_tag }}
           restore-keys: |
             last-release-
 
       - name: Compare with cached release
         id: check
         run: |
-          LATEST_TAG="${{ steps.get-latest-release.outputs.result }}"
+          LATEST_TAG="${{ steps.get-latest-release.outputs.latest_tag }}"
           if [ -f .last_release ]; then
             LAST_TAG=$(cat .last_release)
           else
