@@ -44,6 +44,7 @@ apps:
     command: bin/spacectl
     plugs:
       - network
+      - network-bind
       - desktop
 
 parts:
