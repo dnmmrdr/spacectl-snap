@@ -1,0 +1,55 @@
+name: dnmmrdr-spacectl
+base: core24
+version: #This will get overwrote by sed during the github actions run to match then latest version
+summary: Unofficial snap of the spacelift spacectl tool
+description: |
+  This is a unofficial snap of the spacelift.io tool spacectl
+  spacectl allows user to communicate with the spacelift api
+  through a convenient cli tool. This snap is NOT packaged
+  by spacelift please do not report issues with this tool to there
+  github page.
+license: MIT
+
+contact:
+  - snap@drdisgust.com
+
+issues:
+  - https://github.com/dnmmrdr/spacectl-snap/issues
+
+source-code:
+  - https://github.com/dnmmrdr/spacectl-snap
+  - https://github.com/spacelift-io/spacectl
+
+website:
+  - https://docs.spacelift.io/concepts/spacectl
+
+grade: devel
+confinement: strict
+
+platforms:
+  amd64:
+    build-on:
+      - amd64
+    build-for:
+      - amd64
+  arm64:
+    build-on:
+      - amd64
+      - arm64
+    build-for:
+      - arm64
+
+apps:
+  spacectl:
+    command: bin/spacectl
+    plugs:
+      - network
+      - desktop
+
+parts:
+  spacectl:
+    plugin: go
+    source-type: git
+    source: https://github.com/spacelift-io/spacectl.git
+    build-snaps:
+      - go/1.24/stable
