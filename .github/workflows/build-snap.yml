@@ -68,7 +68,7 @@ jobs:
 #        if: env.NEW_TAG != ''
 #        uses: snapcore/action-publish@v1
 #        env:
-#          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+#          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
 #        with:
 #          snap: ${{ steps.build-snap.outputs.snap }}
 #          channel: stable
