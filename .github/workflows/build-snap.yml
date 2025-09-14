@@ -15,7 +15,7 @@ jobs:
         id: get-latest-release
         run: |
           latest_tag=$(curl -s https://api.github.com/repos/spacelift-io/spacectl/tags \
-            | jq -r '.[0].name')
+            | jq -r '.[0].name' | sed s/v//g )
           echo "Latest tag: $latest_tag"
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
 
