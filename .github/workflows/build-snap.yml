@@ -18,11 +18,11 @@ jobs:
             | jq -r '.[0].name' | sed s/v//g )
           echo $latest_tag >> .last_release
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
-          echo "$latest_tag"
+          echo "$latest_tag" >> $GITHUB_OUTPUT
 
       - name: Get latest tag from another repo
         id: test
-        run: echo "${{ steps.get-latest-release.outputs.result }}"
+        run: echo "${{ steps.get-latest-release.outputs.output1 }}"
 
 
       - name: Restore last built release (cache)
