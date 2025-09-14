@@ -65,7 +65,7 @@ jobs:
 
       - name: Update Snap version dynamically
         run: |
-          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
+          sed -i "s/^version: .*/version: ${{ needs.detect-version.outputs.run_build }}/" snap/snapcraft.yaml
           cat snap/snapcraft.yaml
 
       - name: Build Snap
