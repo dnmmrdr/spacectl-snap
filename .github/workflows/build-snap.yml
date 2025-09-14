@@ -16,9 +16,14 @@ jobs:
         run: |
           latest_tag=$(curl -s https://api.github.com/repos/spacelift-io/spacectl/tags \
             | jq -r '.[0].name' | sed s/v//g )
-          echo "Latest tag: $latest_tag"
           echo $latest_tag >> .last_release
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
+          echo "$latest_tag"
+
+      - name: Get latest tag from another repo
+        id: test
+        run: echo ${{ steps.get-latest-release.outputs.result }}
+
 
       - name: Restore last built release (cache)
         id: cache-last-release
