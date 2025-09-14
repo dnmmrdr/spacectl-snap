@@ -1,0 +1,77 @@
+name: Build Snap
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  build-snap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get latest tag from another repo
+        id: get-latest-release
+        run: |
+          latest_tag=$(curl -s https://api.github.com/repos/spacelift-io/spacectl/tags \
+            | jq -r '.[0].name')
+          echo "Latest tag: $latest_tag"
+          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
+
+      - name: Restore last built release (cache)
+        id: cache-last-release
+        uses: actions/cache@v3
+        with:
+          path: .last_releas
+
+          key: last-release-${{ steps.latest_release.outputs.result }}
+          restore-keys: |
+            last-release-
+
+      - name: Compare with cached release
+        id: check
+        run: |
+          LATEST_TAG="${{ steps.latest_release.outputs.result }}"
+          if [ -f .last_release ]; then
+            LAST_TAG=$(cat .last_release)
+          else
+            LAST_TAG=""
+          fi
+
+          echo "Latest upstream tag: $LATEST_TAG"
+          echo "Last built tag: $LAST_TAG"
+
+          if [ "$LATEST_TAG" = "$LAST_TAG" ]; then
+            echo "No new release found. Exiting."
+            exit 0
+          fi
+
+          # Save the new tag so it gets cached at the end of the job
+          echo $LATEST_TAG > .last_release
+          echo "NEW_TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: Checkout current code
+        if: env.NEW_TAG != ''
+        uses: actions/checkout@v5
+
+      - name: Update Snap version dynamically
+        if: env.NEW_TAG != ''
+        run: |
+          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
+          cat snap/snapcraft.yaml
+
+#      - name: Build Snap
+#        if: env.NEW_TAG != ''
+#        uses: snapcore/action-build@v1
+#        id: build-snap
+#
+#      - name: Publish Snap
+#        if: env.NEW_TAG != ''
+#        uses: snapcore/action-publish@v1
+#        env:
+#          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+#        with:
+#          snap: ${{ steps.build-snap.outputs.snap }}
+#          channel: stable
+#          release: env.NEW_TAG
