@@ -49,16 +49,16 @@ jobs:
           echo $LATEST_TAG > .last_release
           echo "NEW_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
-#      - name: Checkout current code
-#        if: env.NEW_TAG != ''
-#        uses: actions/checkout@v5
-#
-#      - name: Update Snap version dynamically
-#        if: env.NEW_TAG != ''
-#        run: |
-#          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
-#          cat snap/snapcraft.yaml
-#
+      - name: Checkout current code
+        if: env.NEW_TAG != ''
+        uses: actions/checkout@v5
+
+      - name: Update Snap version dynamically
+        if: env.NEW_TAG != ''
+        run: |
+          sed -i "s/^version: .*/version: '${NEW_TAG}'/" snap/snapcraft.yaml
+          cat snap/snapcraft.yaml
+
 #      - name: Build Snap
 #        if: env.NEW_TAG != ''
 #        uses: snapcore/action-build@v1
