@@ -26,6 +26,8 @@ jobs:
         with:
           path: .last_release
           key: last-release-${{ steps.get-latest-release.outputs.result }}
+          restore-keys: |
+            last-release-
 
       - name: Compare with cached release
         id: check
