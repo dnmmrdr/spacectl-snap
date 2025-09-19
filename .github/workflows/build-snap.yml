@@ -80,11 +80,11 @@ jobs:
       - name: Test
         run: echo "${{ steps.build-snap.outputs.snap }}"
 
-#      - name: Publish Snap
-#        uses: snapcore/action-publish@v1
-#        env:
-#          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
-#        with:
-#          snap: ${{ steps.build-snap.outputs.snap }}
-#          snap: ./*.snap
-#          release: edge
+      - name: Publish Snap
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
+        with:
+          snap: ${{ steps.build-snap.outputs.snap }}
+          snap: ./*.snap
+          release: edge
