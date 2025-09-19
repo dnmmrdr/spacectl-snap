@@ -57,6 +57,10 @@ jobs:
   build-snap:
     runs-on: ubuntu-latest
     needs: detect-version
+
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
     
     steps:
       - name: Checkout current code
@@ -70,6 +74,8 @@ jobs:
       - name: Build Snap
         uses: snapcore/action-build@v1
         id: build-snap
+        with:
+          snapcraft-args: "--target-arch ${{ matrix.arch }}"
 
       - name: Test
         run: echo "${{ steps.build-snap.outputs.snap }}"
