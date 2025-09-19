@@ -82,5 +82,5 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
         with:
-          snap: ./*.snap
+          snap: "dnmmrdr-spacectl_${{ needs.detect-version.outputs.latest_tag }}_${{ matrix.arch }}.snap"
           release: edge
