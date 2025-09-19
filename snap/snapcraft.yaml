@@ -23,7 +23,7 @@ source-code:
 website:
   - https://docs.spacelift.io/concepts/spacectl
 
-grade: devel
+grade: stable
 confinement: strict
 
 platforms:
