@@ -72,7 +72,7 @@ jobs:
         id: build-snap
 
       - name: Test
-        run: "${{ steps.build-snap.outputs.snap }}"
+        run: echo "${{ steps.build-snap.outputs.snap }}"
 
 #      - name: Publish Snap
 #        uses: snapcore/action-publish@v1
