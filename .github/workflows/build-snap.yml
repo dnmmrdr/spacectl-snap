@@ -72,6 +72,9 @@ jobs:
         uses: snapcore/action-build@v1
         id: build-snap
 
+      - name: Test
+        run: "${{ steps.build-snap.outputs.snap }}"
+
       - name: Publish Snap
         uses: snapcore/action-publish@v1
         env:
