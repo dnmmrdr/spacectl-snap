@@ -57,6 +57,7 @@ jobs:
   build-snap:
     runs-on: ubuntu-latest
     needs: detect-version
+    if: ${{ needs.detect-version.outputs.run_build  == 'true' }}
 
     strategy:
       matrix:
@@ -83,4 +84,4 @@ jobs:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
         with:
           snap: "dnmmrdr-spacectl_${{ needs.detect-version.outputs.latest_tag }}_${{ matrix.arch }}.snap"
-          release: edge
+          release: stable
