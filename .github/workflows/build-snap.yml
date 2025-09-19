@@ -75,7 +75,7 @@ jobs:
         uses: snapcore/action-build@v1
         id: build-snap
         with:
-          snapcraft-args: "--target-arch ${{ matrix.arch }}"
+          snapcraft-args: "--build-for=${{ matrix.arch }}"
 
       - name: Test
         run: echo "${{ steps.build-snap.outputs.snap }}"
@@ -86,4 +86,5 @@ jobs:
 #          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
 #        with:
 #          snap: ${{ steps.build-snap.outputs.snap }}
+#          snap: ./*.snap
 #          release: edge
