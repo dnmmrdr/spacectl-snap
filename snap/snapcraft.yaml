@@ -23,25 +23,12 @@ source-code:
 website:
   - https://docs.spacelift.io/concepts/spacectl
 
-grade: stable
+grade: devel
 confinement: strict
-
-platforms:
-  amd64:
-    build-on:
-      - amd64
-    build-for:
-      - amd64
-  arm64:
-    build-on:
-      - amd64
-      - arm64
-    build-for:
-      - arm64
 
 apps:
   spacectl:
-    command: bin/spacectl
+    command: spacectl
     plugs:
       - network
       - network-bind
@@ -49,8 +36,6 @@ apps:
 
 parts:
   spacectl:
-    plugin: go
-    source-type: git
-    source: https://github.com/spacelift-io/spacectl.git
-    build-snaps:
-      - go/1.24/stable
+    plugin: dump
+    source-type: zip
+    source: 
