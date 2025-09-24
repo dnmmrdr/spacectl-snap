@@ -13,13 +13,16 @@ jobs:
     outputs:
       latest_tag: ${{ steps.get-latest-release.outputs.latest_tag }}
       run_build: ${{ steps.check.outputs.run_build }}
+      download_urls: ${{ steps.get-latest-release.outputs.download_urls }}
 
     steps:
       - name: Get latest tag from another repo
         id: get-latest-release
         run: |
-          latest_tag=$(curl -s https://api.github.com/repos/spacelift-io/spacectl/tags \
-            | jq -r '.[0].name' | sed s/v//g | tr -d '\n')
+          curl -o output.json -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/spacelift-io/spacectl/releases
+          latest_tag=$(cat output.json | jq -r '.[0].name' | sed s/v//g | tr -d '\n')
+          download_urls=$(cat output.json | jq -r '.[0].assets.[].browser_download_url' | grep linux | grep amd64)
+          echo "download_urls=$download_urls" >> $GITHUB_OUTPUT
           echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
 
       - name: Restore last built release (cache)
@@ -59,10 +62,6 @@ jobs:
     needs: detect-version
     if: ${{ needs.detect-version.outputs.run_build  == 'true' }}
 
-    strategy:
-      matrix:
-        arch: [amd64, arm64]
-    
     steps:
       - name: Checkout current code
         uses: actions/checkout@v5
@@ -72,16 +71,20 @@ jobs:
           sed -i "s/^version: .*/version: ${{ needs.detect-version.outputs.latest_tag }}/" snap/snapcraft.yaml
           cat snap/snapcraft.yaml
 
+      - name: Update download url dynamically
+        run: |
+          ESCAPED_REPLACE=$(printf '%s\n' "${{ needs.detect-version.outputs.download_urls }}" | sed -e 's/[\/&]/\\&/g')
+          sed -i "s/source: .*/source: $ESCAPED_REPLACE/" snap/snapcraft.yaml
+          cat snap/snapcraft.yaml
+
       - name: Build Snap
         uses: snapcore/action-build@v1
         id: build-snap
-        with:
-          snapcraft-args: "--build-for=${{ matrix.arch }}"
 
       - name: Publish Snap
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
         with:
-          snap: "dnmmrdr-spacectl_${{ needs.detect-version.outputs.latest_tag }}_${{ matrix.arch }}.snap"
-          release: stable
+          snap: "${{ steps.build-snap.outputs.snap }}"
+          release: edge
