@@ -1,6 +1,7 @@
 name: dnmmrdr-spacectl
 base: core24
 version: #This will get overwrote by sed during the github actions run to match then latest version
+title: "Spacectl"
 summary: Unofficial snap of the spacelift spacectl tool
 description: |
   This is a unofficial snap of the spacelift.io tool spacectl
