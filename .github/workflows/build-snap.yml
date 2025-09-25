@@ -62,6 +62,9 @@ jobs:
     needs: detect-version
     if: ${{ needs.detect-version.outputs.run_build  == 'true' }}
 
+    outputs:
+      snap_path: ${{ steps.build-snap.outputs.snap }}
+
     steps:
       - name: Checkout current code
         uses: actions/checkout@v5
@@ -88,3 +91,31 @@ jobs:
         with:
           snap: "${{ steps.build-snap.outputs.snap }}"
           release: stable
+
+  create-pr:
+    runs-on: ubuntu-latest
+    needs: 
+      - build-snap
+      - detect-version
+    
+    steps:
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Upgrade version to ${{ needs.detect-version.outputs.latest_tag }}"
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: "upgrade_version_${{ needs.detect-version.outputs.latest_tag }}"
+          delete-branch: true
+          title: "Upgrade version to ${{ needs.detect-version.outputs.latest_tag }}"
+          body: |
+            Automatic PR created after pushing new version to snap store
+            Version: ${{ needs.detect-version.outputs.latest_tag }}
+            Upstream URL: ${{ needs.detect-version.outputs.download_urls }}
+          labels: |
+            automated pr
+          draft: false
+          add-paths: |
+            ${{ needs.build-snap.outputs.snap_path }}
