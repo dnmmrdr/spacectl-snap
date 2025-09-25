@@ -1,6 +1,6 @@
 name: dnmmrdr-spacectl
 base: core24
-version: #This will get overwrote by sed during the github actions run to match then latest version
+version: 1.15.2
 title: "Spacectl"
 summary: Unofficial snap of the spacelift spacectl tool
 description: |
@@ -39,4 +39,4 @@ parts:
   spacectl:
     plugin: dump
     source-type: zip
-    source: 
+    source: https://github.com/spacelift-io/spacectl/releases/download/v1.15.2/spacectl_1.15.2_linux_amd64.zip
