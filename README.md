@@ -30,6 +30,6 @@ Note: running this as root is necessary
 
 ### Using spacetl
 
-Apart from the exception mentioned expection above, the tool should work in the same way, the documentation for spacectl can be found at the link below
+Apart from the exception mentioned above, the tool should work in the same way, the documentation for spacectl can be found at the link below
 
 [spacectl documentation](https://docs.spacelift.io/concepts/spacectl)
